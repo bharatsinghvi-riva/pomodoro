@@ -6,12 +6,13 @@ import java.util.Random;
 
 public class MockPomodoroServer {
 
-    private static final FlockApiClient flockApiClient = new FlockApiClient("de0e7de2-727a-4930-a3c4-f24be9056b12", false);
+    private static final String USER_TOKEN = "de0e7de2-727a-4930-a3c4-f24be9056b12";
+    private static final FlockApiClient flockApiClient = new FlockApiClient(USER_TOKEN, false);
 
     public static void main(String[] args) throws Exception {
         HashMap<String, PomodoroUser> map = new HashMap<>();
         String userId = "u:fhm6yka0mms6yffx";
-        PomodoroUser user = new PomodoroUser(userId, new ArrayList<>(), String.valueOf(System.currentTimeMillis()));
+        PomodoroUser user = new PomodoroUser(userId, USER_TOKEN);
         map.put(userId, user);
         PomodoroLifeCycle pomodoro = new PomodoroLifeCycle(user, flockApiClient);
         pomodoro.startLife();
