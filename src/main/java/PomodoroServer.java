@@ -51,9 +51,7 @@ public class PomodoroServer {
         if (text.startsWith("distraction")) {
             PomodoroAPI.getPomodoroUser(userId).addToDistractions(text.substring("distraction".length()));
         } else if (text.startsWith("startWork")) {
-            PomodoroUser pomodoroUser = PomodoroAPI.addActiveUser(userId);
-            PomodoroLifeCycle pomodoroLifeCycle = new PomodoroLifeCycle(pomodoroUser, new FlockApiClient(pomodoroUser.getUserToken(), false));
-            pomodoroLifeCycle.startLife();
+            PomodoroAPI.addActiveUser(userId);
         } else if (text.startsWith("end")) {
             PomodoroAPI.removeActiveUser(userId);
         }
