@@ -16,6 +16,7 @@ public class PomodoroAPI {
 
     private static Set<PomodoroUser> pomodoroUsers = new HashSet<>();
     private static Map<PomodoroUser, PomodoroLifeCycle> activeUsersMap = new HashMap<>();
+    private static final String POMODORO_BOT_TOKEN = "c4814226-86f2-42bd-8dd1-cdb84155a581";
 
     public static void sendStartSessionMessage(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         String startSessionMsg = "Your pomodoro session has begun. Focus!";
@@ -80,7 +81,7 @@ public class PomodoroAPI {
         String message = "User started lifeCycle: " + userId;
         System.out.println(message);
         PomodoroUser pomodoroUser = getPomodoroUser(userId);
-        PomodoroLifeCycle pomodoroLifeCycle = new PomodoroLifeCycle(pomodoroUser, new FlockApiClient(pomodoroUser.getUserToken(), false));
+        PomodoroLifeCycle pomodoroLifeCycle = new PomodoroLifeCycle(pomodoroUser, new FlockApiClient(POMODORO_BOT_TOKEN, false));
         pomodoroLifeCycle.startLife();
         activeUsersMap.put(pomodoroUser, pomodoroLifeCycle);
         return pomodoroUser;
