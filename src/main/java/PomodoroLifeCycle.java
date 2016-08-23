@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 public class PomodoroLifeCycle {
 
-    private static final int POMODORO_SESSION_TIME = 5;
-    private static final int POMODORO_BREAK_TIME = 1;
+    private static final int POMODORO_SESSION_TIME = 30;
+    private static final int POMODORO_BREAK_TIME = 10;
     private static final TimeUnit POMODORO_TIME_UNIT = TimeUnit.SECONDS;
     private final PomodoroUser pomodoroUser;
     private ScheduledExecutorService executor;
