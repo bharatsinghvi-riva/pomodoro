@@ -14,17 +14,10 @@ import java.util.Set;
 
 public class PomodoroAPI {
 
-    private final FlockApiClient flockApiClient;
-    private static Set<PomodoroUser> pomodoroUsers;
-    private static Map<PomodoroUser, PomodoroLifeCycle> activeUsersMap;
+    private static Set<PomodoroUser> pomodoroUsers = new HashSet<>();
+    private static Map<PomodoroUser, PomodoroLifeCycle> activeUsersMap = new HashMap<>();
 
-    public PomodoroAPI(FlockApiClient flockApiClient) {
-        this.flockApiClient = flockApiClient;
-        pomodoroUsers = new HashSet<>();
-        activeUsersMap = new HashMap<>();
-    }
-
-    public void sendStartSessionMessage(PomodoroUser pomodoroUser) {
+    public static void sendStartSessionMessage(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         String startSessionMsg = "Your pomodoro session has begun. Focus!";
         System.out.println(startSessionMsg);
         Message message = new Message(pomodoroUser.getUserId(), startSessionMsg);
@@ -39,10 +32,10 @@ public class PomodoroAPI {
         Attachment[] attachments = new Attachment[1];
         attachments[0] = attachment;
         message.setAttachments(attachments);
-        sendMessage(message);
+        sendMessage(message, flockApiClient);
     }
 
-    public void sendEndSessionMessage(PomodoroUser pomodoroUser) {
+    public static void sendEndSessionMessage(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         String endSessionMsg = "Its time to take a break. Chill!";
         endSessionMsg += pomodoroUser.getDistractions();
         System.out.println(endSessionMsg);
@@ -58,14 +51,14 @@ public class PomodoroAPI {
         Attachment[] attachments = new Attachment[1];
         attachments[0] = attachment;
         message.setAttachments(attachments);
-        sendMessage(message);
+        sendMessage(message, flockApiClient);
     }
 
-    public void terminateSession(PomodoroUser pomodoroUser) {
+    public static void terminateSession(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         String terminateSessionMsg = "Pack your bags. You have been productive today!";
         System.out.println(terminateSessionMsg);
         Message message = new Message(pomodoroUser.getUserId(), terminateSessionMsg);
-        sendMessage(message);
+        sendMessage(message, flockApiClient);
     }
 
     public static void addUser(PomodoroUser pomodoroUser) {
@@ -78,7 +71,7 @@ public class PomodoroAPI {
         String message = "User started lifeCycle: " + userId;
         System.out.println(message);
         PomodoroUser pomodoroUser = getPomodoroUser(userId);
-        PomodoroLifeCycle pomodoroLifeCycle = new PomodoroLifeCycle(pomodoroUser, new FlockApiClient(pomodoroUser.getUserToken()));
+        PomodoroLifeCycle pomodoroLifeCycle = new PomodoroLifeCycle(pomodoroUser, new FlockApiClient(pomodoroUser.getUserToken(), false));
         pomodoroLifeCycle.startLife();
         activeUsersMap.put(pomodoroUser, pomodoroLifeCycle);
         return pomodoroUser;
@@ -106,7 +99,7 @@ public class PomodoroAPI {
         return pomodoroUser;
     }
 
-    private void sendMessage(Message message) {
+    private static void sendMessage(Message message, FlockApiClient flockApiClient) {
         try {
             flockApiClient.chatSendMessage(new FlockMessage(message));
         } catch (Exception e) {

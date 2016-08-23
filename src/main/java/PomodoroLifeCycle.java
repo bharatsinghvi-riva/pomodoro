@@ -11,17 +11,17 @@ public class PomodoroLifeCycle {
     private static final TimeUnit POMODORO_TIME_UNIT = TimeUnit.SECONDS;
     private final PomodoroUser pomodoroUser;
     private ScheduledExecutorService executor;
-    private final PomodoroAPI pomodoroAPI;
+    private final FlockApiClient flockApiClient;
     private String startTime;
 
     public PomodoroLifeCycle(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         this.pomodoroUser = pomodoroUser;
-        pomodoroAPI = new PomodoroAPI(flockApiClient);
+        this.flockApiClient = flockApiClient;
     }
 
     public void startLife() {
         startTime = String.valueOf(System.currentTimeMillis());
-        pomodoroAPI.sendStartSessionMessage(pomodoroUser);
+        PomodoroAPI.sendStartSessionMessage(pomodoroUser, flockApiClient);
         if (executor != null && !executor.isShutdown()) executor.shutdown();
         executor = Executors.newSingleThreadScheduledExecutor();
         Runnable runnable = getRunnableOnEndOfPomodoroSession();
@@ -30,7 +30,7 @@ public class PomodoroLifeCycle {
 
     private Runnable getRunnableOnEndOfPomodoroSession() {
         return () -> {
-            pomodoroAPI.sendEndSessionMessage(pomodoroUser);
+            PomodoroAPI.sendEndSessionMessage(pomodoroUser, flockApiClient);
             pomodoroUser.deleteDistractions();
             restartPomodoroSession();
         };
@@ -48,7 +48,7 @@ public class PomodoroLifeCycle {
     }
 
     public void endLife() {
-        pomodoroAPI.terminateSession(pomodoroUser);
+        PomodoroAPI.terminateSession(pomodoroUser, flockApiClient);
         executor.shutdownNow();
     }
 }
