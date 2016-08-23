@@ -2,12 +2,21 @@ import co.flock.www.FlockApiClient;
 import co.flock.www.model.messages.FlockMessage;
 import co.flock.www.model.messages.Message;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class PomodoroAPI {
 
     private final FlockApiClient flockApiClient;
+    private static Set<PomodoroUser> pomodoroUsers;
+    private static Map<PomodoroUser, PomodoroLifeCycle> activeUsersMap;
 
     public PomodoroAPI(FlockApiClient flockApiClient) {
         this.flockApiClient = flockApiClient;
+        pomodoroUsers = new HashSet<>();
+        activeUsersMap = new HashMap<>();
     }
 
     public void sendStartSessionMessage(PomodoroUser pomodoroUser) {
@@ -30,6 +39,44 @@ public class PomodoroAPI {
         System.out.println(terminateSessionMsg);
         Message message = new Message(pomodoroUser.getUserId(), terminateSessionMsg);
         sendMessage(message);
+    }
+
+    public static void addUser(PomodoroUser pomodoroUser) {
+        String message = "New user installed app: " + pomodoroUser;
+        System.out.println(message);
+        pomodoroUsers.add(pomodoroUser);
+    }
+
+    public static PomodoroUser addActiveUser(String userId) {
+        String message = "User started lifeCycle: " + userId;
+        System.out.println(message);
+        PomodoroUser pomodoroUser = getPomodoroUser(userId);
+        PomodoroLifeCycle pomodoroLifeCycle = new PomodoroLifeCycle(pomodoroUser, new FlockApiClient(pomodoroUser.getUserToken()));
+        pomodoroLifeCycle.startLife();
+        activeUsersMap.put(pomodoroUser, pomodoroLifeCycle);
+        return pomodoroUser;
+    }
+
+    public static PomodoroUser removeActiveUser(String userId) {
+        String message = "User ended lifeCycle: " + userId;
+        System.out.println(message);
+        PomodoroUser pomodoroUser = getPomodoroUser(userId);
+        if (pomodoroUser != null) {
+            activeUsersMap.get(pomodoroUser).endLife();
+            activeUsersMap.remove(pomodoroUser);
+        }
+        return pomodoroUser;
+    }
+
+    public static PomodoroUser getPomodoroUser(String userId) {
+        PomodoroUser pomodoroUser = null;
+        for (PomodoroUser currPomodororUser : pomodoroUsers) {
+            if (currPomodororUser.getUserId().equals(userId)) {
+                pomodoroUser = currPomodororUser;
+            }
+            System.out.print("Found pomodoro user:" + pomodoroUser + " for id:" + userId);
+        }
+        return pomodoroUser;
     }
 
     private void sendMessage(Message message) {
