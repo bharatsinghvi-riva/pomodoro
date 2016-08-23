@@ -1,15 +1,16 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class PomodoroUser {
     private final String userId;
     private final List<String> distractions;
-    private final String startTime;
+    private final String userToken;
     private String endTime;
 
-    public PomodoroUser(String userId, List<String> distractions, String startTime) {
+    public PomodoroUser(String userId, String userToken) {
         this.userId = userId;
-        this.distractions = distractions;
-        this.startTime = startTime;
+        this.distractions = new ArrayList<>();
+        this.userToken = userToken;
     }
 
     public void setEndTime(String endTime) {
@@ -24,8 +25,8 @@ public class PomodoroUser {
         return distractions;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getUserToken() {
+        return userToken;
     }
 
     public void addToDistractions(String distraction) {
@@ -37,11 +38,24 @@ public class PomodoroUser {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PomodoroUser that = (PomodoroUser) o;
+        if (!userId.equals(that.userId)) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return userId.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "PomodoroUser{" +
                 "userId='" + userId + '\'' +
                 ", distractions=" + distractions +
-                ", startTime='" + startTime + '\'' +
                 '}';
     }
 }
