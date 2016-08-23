@@ -51,6 +51,7 @@ public class PomodoroUser {
         return "PomodoroUser{" +
                 "userId='" + userId + '\'' +
                 ", distractions=" + distractions +
+                ", userToken='" + userToken + '\'' +
                 '}';
     }
 }
