@@ -47,7 +47,7 @@ public class PomodoroLifeCycle {
 
     public void endLife() {
         pomodoroAPI.terminateSession(pomodoroUser);
-        if (!executor.isShutdown()) executor.shutdown();
+        executor.shutdownNow();
     }
 }
 
