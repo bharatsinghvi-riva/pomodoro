@@ -49,6 +49,7 @@ public class PomodoroLifeCycle {
 
     public void endLife() {
         PomodoroAPI.terminateSession(pomodoroUser, flockApiClient);
+        pomodoroUser.deleteDistractions();
         executor.shutdownNow();
     }
 }
