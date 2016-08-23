@@ -64,9 +64,13 @@ public class PomodoroAPI {
     public static void addUser(PomodoroUser pomodoroUser) {
         String message = "New user installed app: " + pomodoroUser;
         System.out.println(message);
-        //hack to remove object in case the user installed and uninstalled the app
-        pomodoroUsers.remove(getPomodoroUser(pomodoroUser.getUserId()));
+        removeUninstalledUserIfExist(pomodoroUser.getUserId());
         pomodoroUsers.add(pomodoroUser);
+    }
+
+    private static void removeUninstalledUserIfExist(String userId) {
+        pomodoroUsers.remove(getPomodoroUser(userId));
+        activeUsersMap.remove(getPomodoroUser(userId));
     }
 
     public static PomodoroUser addActiveUser(String userId) {
