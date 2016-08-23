@@ -54,7 +54,7 @@ public class PomodoroAPI {
         sendMessage(message, flockApiClient);
     }
 
-    public static void terminateSession(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
+    public static void sendTerminateSessionMessage(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         String terminateSessionMsg = "Pack your bags. You have been productive today!";
         if (!pomodoroUser.getDistractions().isEmpty()) {
             terminateSessionMsg += "\nAlso remember to complete your tasks: " + pomodoroUser.getDistractions();
