@@ -1,4 +1,9 @@
+import attachments.AttachmentAssets;
 import co.flock.www.FlockApiClient;
+import co.flock.www.model.messages.Attachments.Attachment;
+import co.flock.www.model.messages.Attachments.Image;
+import co.flock.www.model.messages.Attachments.ImageView;
+import co.flock.www.model.messages.Attachments.View;
 import co.flock.www.model.messages.FlockMessage;
 import co.flock.www.model.messages.Message;
 
@@ -23,14 +28,36 @@ public class PomodoroAPI {
         String startSessionMsg = "Your pomodoro session has begun. Focus!";
         System.out.println(startSessionMsg);
         Message message = new Message(pomodoroUser.getUserId(), startSessionMsg);
+        Attachment attachment = new Attachment();
+        View view = new View();
+        Image image = new Image();
+        image.setSrc(AttachmentAssets.getFocusAttachment());
+        ImageView imageView = new ImageView();
+        imageView.setOriginal(image);
+        view.setImage(imageView);
+        attachment.setViews(view);
+        Attachment[] attachments = new Attachment[1];
+        attachments[0] = attachment;
+        message.setAttachments(attachments);
         sendMessage(message);
     }
 
     public void sendEndSessionMessage(PomodoroUser pomodoroUser) {
-        String endSessionMsg = "Its time to take a break. Chill!\n";
+        String endSessionMsg = "Its time to take a break. Chill!";
         endSessionMsg += pomodoroUser.getDistractions();
         System.out.println(endSessionMsg);
         Message message = new Message(pomodoroUser.getUserId(), endSessionMsg);
+        Attachment attachment = new Attachment();
+        View view = new View();
+        Image image = new Image();
+        image.setSrc(AttachmentAssets.getBreakAttachment());
+        ImageView imageView = new ImageView();
+        imageView.setOriginal(image);
+        view.setImage(imageView);
+        attachment.setViews(view);
+        Attachment[] attachments = new Attachment[1];
+        attachments[0] = attachment;
+        message.setAttachments(attachments);
         sendMessage(message);
     }
 
