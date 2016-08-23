@@ -4,14 +4,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.post;
 
-public class PomodoroServer
-{
+public class PomodoroServer {
     private static final Logger _logger = Logger.getLogger(PomodoroServer.class);
 
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException {
         _logger.debug("Starting..");
 
         get("/", (req, res) -> {
@@ -23,14 +22,11 @@ public class PomodoroServer
             _logger.debug("Req received : " + req);
             JSONObject jsonObject = new JSONObject(req.body());
             String type = (String) jsonObject.get("name");
-            if ("app.install".equals(type))
-            {
+            if ("app.install".equals(type)) {
                 handleAppInstall(jsonObject);
-            }
-            else
-            {
+            } else {
                 _logger.debug("Got event: " + type);
-                if (type.equals("client.slashCommand")){
+                if (type.equals("client.slashCommand")) {
                     handleSlashCommand(jsonObject);
                 }
             }
@@ -45,17 +41,21 @@ public class PomodoroServer
         _logger.debug("Install event received " + userId);
         System.out.println("Userid : " + userId);
         System.out.println("userToken: " + userToken);
-        FlockApiClient flockApiClient = new FlockApiClient(userToken,false);
+        PomodoroUser pomodoroUser = new PomodoroUser(userId, userToken);
+        PomodoroAPI.addUser(pomodoroUser);
     }
 
     private static void handleSlashCommand(JSONObject jsonObject) {
+        String userId = jsonObject.getString("userId");
         String text = jsonObject.getString("text");
         if (text.startsWith("distraction")) {
-
+            PomodoroAPI.getPomodoroUser(userId).addToDistractions(text.substring("distraction".length()));
         } else if (text.startsWith("startWork")) {
-
+            PomodoroUser pomodoroUser = PomodoroAPI.addActiveUser(userId);
+            PomodoroLifeCycle pomodoroLifeCycle = new PomodoroLifeCycle(pomodoroUser, new FlockApiClient(pomodoroUser.getUserToken(), false));
+            pomodoroLifeCycle.startLife();
         } else if (text.startsWith("end")) {
-
+            PomodoroAPI.removeActiveUser(userId);
         }
     }
 }
