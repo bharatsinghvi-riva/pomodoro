@@ -1,7 +1,7 @@
-import co.flock.www.FlockApiClient;
+import static spark.Spark.*;
 
 public class PomodoroServer {
     public static void main(String[] args) {
-
+        get("/hello", (req, res) -> "Hello World");
     }
 }
