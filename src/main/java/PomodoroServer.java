@@ -49,7 +49,7 @@ public class PomodoroServer {
         String text = jsonObject.getString("text");
         if (text.startsWith("distraction")) {
             PomodoroAPI.getPomodoroUser(userId).addToDistractions(text.substring("distraction".length()));
-        } else if (text.startsWith("startWork")) {
+        } else if (text.startsWith("start")) {
             PomodoroAPI.addActiveUser(userId);
         } else if (text.startsWith("end")) {
             PomodoroAPI.removeActiveUser(userId);
