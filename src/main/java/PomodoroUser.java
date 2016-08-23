@@ -5,16 +5,11 @@ public class PomodoroUser {
     private final String userId;
     private final List<String> distractions;
     private final String userToken;
-    private String endTime;
 
     public PomodoroUser(String userId, String userToken) {
         this.userId = userId;
         this.distractions = new ArrayList<>();
         this.userToken = userToken;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     public String getUserId() {
