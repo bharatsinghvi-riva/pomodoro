@@ -12,7 +12,6 @@ public class PomodoroLifeCycle {
     private final PomodoroUser pomodoroUser;
     private ScheduledExecutorService executor;
     private final FlockApiClient flockApiClient;
-    private String startTime;
 
     public PomodoroLifeCycle(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         this.pomodoroUser = pomodoroUser;
@@ -20,7 +19,6 @@ public class PomodoroLifeCycle {
     }
 
     public void startLife() {
-        startTime = String.valueOf(System.currentTimeMillis());
         PomodoroAPI.sendStartSessionMessage(pomodoroUser, flockApiClient);
         if (executor != null && !executor.isShutdown()) executor.shutdown();
         executor = Executors.newSingleThreadScheduledExecutor();
