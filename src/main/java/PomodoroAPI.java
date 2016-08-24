@@ -38,7 +38,9 @@ public class PomodoroAPI {
 
     public static void sendEndSessionMessage(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         String endSessionMsg = "Its time to take a break. Chill!";
-        endSessionMsg += pomodoroUser.getDistractions();
+        if (!pomodoroUser.getDistractions().isEmpty()) {
+            endSessionMsg += "\nYou wanted to these things in your break:\n" + pomodoroUser.getDistractionsPrettyPrint();
+        }
         System.out.println(endSessionMsg);
         Message message = new Message(pomodoroUser.getUserId(), endSessionMsg);
         Attachment attachment = new Attachment();
@@ -58,7 +60,7 @@ public class PomodoroAPI {
     public static void sendTerminateSessionMessage(PomodoroUser pomodoroUser, FlockApiClient flockApiClient) {
         String terminateSessionMsg = "Pack your bags. You have been productive today!";
         if (!pomodoroUser.getDistractions().isEmpty()) {
-            terminateSessionMsg += "\nAlso remember to complete your tasks: " + pomodoroUser.getDistractions();
+            terminateSessionMsg += "\nAlso remember to complete your tasks:\n" + pomodoroUser.getDistractionsPrettyPrint();
         }
         System.out.println(terminateSessionMsg);
         Message message = new Message(pomodoroUser.getUserId(), terminateSessionMsg);

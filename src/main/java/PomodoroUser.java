@@ -20,6 +20,14 @@ public class PomodoroUser {
         return distractions;
     }
 
+    public String getDistractionsPrettyPrint() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String distraction: distractions) {
+            stringBuilder.append("* ").append(distraction).append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
     public String getUserToken() {
         return userToken;
     }
